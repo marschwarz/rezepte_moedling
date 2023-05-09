@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/recipe.dart';
+import '../widgets/recipe_form.dart';
 
 class EditRecipeScreen extends StatelessWidget {
   final Recipe recipe;
@@ -10,9 +11,9 @@ class EditRecipeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rezept Editieren'),
+        title:  Text(recipe.name),
       ),
-      body: Center(child: Text(recipe.name)),
+      body: const Center(child: RecipeForm()),
     );
   }
 }

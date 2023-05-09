@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/recipe_form.dart';
+
 class AddRecipeScreen extends StatelessWidget {
   const AddRecipeScreen({super.key});
 
@@ -9,7 +11,7 @@ class AddRecipeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Rezept Hinzufügen'),
       ),
-      body: Container(),
+      body: const Center(child:  RecipeForm()),
     );
   }
 }
