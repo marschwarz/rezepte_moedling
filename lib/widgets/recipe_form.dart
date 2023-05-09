@@ -65,13 +65,34 @@ final _formKey = GlobalKey<FormBuilderState>();
                 Icons.star,
                 color: Colors.amber,
                 ),
+                allowHalfRating: true,
+                initialRating: field.value ?? 0.0,
+                minRating: 0.0,
+                direction: Axis.horizontal,
+                itemCount: 5,
+                itemSize: 30.0,
+              // ignore: curly_braces_in_flow_control_structures, curly_braces_in_flow_control_structures, curly_braces_in_flow_control_structures
               onRatingUpdate: (rating){
                 field.didChange(rating);
-                
-                })
+                if (field.hasError)
+                  Text(
+                      field.errorText!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                },
+                ),
             ],);
-          } , name: "rating"),
-          
+          } , 
+          validator: (value) {
+            if (value == null || value == 0.0) {
+            return 'Bitte geben Sie ein Rating an';
+            }
+            return null;
+            },
+          name: "rating"),
+
           const SizedBox(height:16),
           ElevatedButton(onPressed: (){
     
