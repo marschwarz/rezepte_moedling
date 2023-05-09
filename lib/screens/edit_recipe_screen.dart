@@ -13,7 +13,7 @@ class EditRecipeScreen extends StatelessWidget {
       appBar: AppBar(
         title:  Text(recipe.name),
       ),
-      body: const Center(child: RecipeForm()),
+      body:  Center(child: RecipeForm(initialRecipe: recipe)),
     );
   }
 }

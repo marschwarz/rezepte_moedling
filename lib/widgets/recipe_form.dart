@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rezepte_moedling/models/recipe.dart';
+import 'package:uuid/uuid.dart';
 
 class RecipeForm extends StatefulWidget {
   const RecipeForm({ Key? key, this.initialRecipe }) : super(key: key);
@@ -122,7 +123,7 @@ final _formKey = GlobalKey<FormBuilderState>();
   void _submitForm(){
   if (_formKey.currentState!.saveAndValidate()) {
     final newRecipe = Recipe(
-    id: DateTime.now().toString(), 
+    id: widget.initialRecipe?.id.toString() ?? const Uuid().v4(),
     name: _formKey.currentState!.fields['name']!.value.toString(), 
     description: _formKey.currentState!.fields['description']!.value.toString(),
     ingredients: _formKey.currentState!.fields['ingredients']!.value.toString(), 

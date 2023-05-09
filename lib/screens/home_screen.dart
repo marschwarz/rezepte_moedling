@@ -53,10 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       _recipes.removeAt(index);
                     });
                   },
-                  onEditPressed: () {
-                    Navigator.pushNamed(context, '/edit_recipe',
-                        arguments: recipe);
-                  },
+                  onEditPressed: () async {
+                    final newRecipe = await Navigator.pushNamed(
+                         context, '/edit_recipe',
+                         arguments: recipe) as Recipe?;
+                      if (newRecipe != null) {
+                         updateRecipe(newRecipe);
+                      }
+                    },
+
                 );
               })
           : _buildPlaceholder(),
@@ -94,4 +99,14 @@ class _HomeScreenState extends State<HomeScreen> {
       'Noch keine Rezepte hinzugefügt',
     ));
   }
+
+void updateRecipe(Recipe updatedRecipe) {
+  final index = _recipes.indexWhere((recipe) => recipe.id == updatedRecipe.id);
+    if (index != -1) {
+      setState(() {
+        _recipes[index] = updatedRecipe;
+      });
+    }
+  }
+
 }
