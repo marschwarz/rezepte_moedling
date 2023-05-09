@@ -72,8 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 12),
           FloatingActionButton(
             heroTag: 'btn2',
-            onPressed: () {
-              Navigator.pushNamed(context, '/add_recipe');
+            onPressed: () async {
+              final newRecipe = await Navigator.pushNamed(context, '/add_recipe') as Recipe?;
+              if (newRecipe != null){
+                setState((){
+                  _recipes.add(newRecipe);
+                });
+              }
             },
             tooltip: 'Rezept hinzufügen',
             child: const Icon(Icons.restaurant),
