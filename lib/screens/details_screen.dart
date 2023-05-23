@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
 
 import '../models/recipe.dart';
+import '../repositories/recipe_repository.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Recipe recipe;
@@ -10,16 +12,30 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+final recipeRepo = Provider.of<RecipeRepository>(context);
+
     return Scaffold(
         appBar: AppBar(
           title: Text(recipe.name),
           actions: [
             IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/edit_recipe',
-                      arguments: recipe);
+                onPressed: () async {
+                  final newRecipe = Navigator.pushReplacementNamed(context, '/edit_recipe',
+                      arguments: recipe) as Recipe?;
+                      if (newRecipe != null) {
+                        recipeRepo.updateRecipe(newRecipe);
+                      }
                 },
-                icon: const Icon(Icons.edit))
+                icon: const Icon(Icons.edit)),
+
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                  recipeRepo.deleteRecipe(recipe.id);
+                  Navigator.pop(context);
+                  },
+                  ),
+
           ],
         ),
         body: SingleChildScrollView(

@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../models/recipe.dart';
 import '../repositories/recipe_repository.dart';
 import '../widgets/recipe_item.dart';
-import '../repositories/list_recipe_repository.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -40,14 +39,14 @@ final recipeRepo = Provider.of<RecipeRepository>(context);
                     return RecipeItem(
                       recipe: recipe,
                       onDeletePressed: () {
-                        //löschen
+                         recipeRepo.deleteRecipe(recipe.id);
                       },
                       onEditPressed: () async {
                         final newRecipe = await Navigator.pushNamed(
                              context, '/edit_recipe',
                              arguments: recipe) as Recipe?;
                           if (newRecipe != null) {
-                             //updateRecipe(newRecipe);
+                             await recipeRepo.updateRecipe(newRecipe);
                           }
                         },
 
