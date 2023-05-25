@@ -1,69 +1,59 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/recipe.dart';
 import 'recipe_repository.dart';
 
-class LocalRecipeRepository extends RecipeRepository{
-  final List<Recipe> _recipes = [
-    Recipe(
-        id: "1",
-        name: "Palatschinken",
-        description: "Palatschinken halt",
-        ingredients: "Ohne Eier vegan",
-        imageURL:
-            "https://images.ichkoche.at/data/image/variations/620x434/7/vegane-palatschinken-img-64793.jpg",
-        rating: 5.0),
-    Recipe(
-        id: "2",
-        name: "Veganer Burger",
-        description: "Superlecker",
-        ingredients: "ganz viel Soja",
-        rating: 4.0),
-    Recipe(
-        id: "3",
-        name: "Vegane Pizza",
-        description: "Echt fettig",
-        ingredients: "ohne Käse",
-        rating: 3.0),
-  ];
-
+class LocalRecipeRepository extends RecipeRepository {
   SharedPreferences? _prefs;
-Future<SharedPreferences> _getPrefs() async {
-  if (_prefs != null) {
-    return _prefs!;
-  }
+  Future<SharedPreferences> _getPrefs() async {
+    if (_prefs != null) {
+      return _prefs!;
+    }
     _prefs = await SharedPreferences.getInstance();
     return _prefs!;
   }
-}
-
 
   @override
-  Future<List<Recipe>> getAllRecipes() async{
-    return _recipes;
+  Future<List<Recipe>> getAllRecipes() async {
+    final prefs = await _getPrefs();
+    final recipes = <Recipe>[];
+    prefs.getKeys().forEach((key) {
+      if (key.startsWith('recipe_')) {
+        final recipeJson = prefs.getString(key);
+        if (recipeJson != null) {
+          final recipe = Recipe.fromJson(recipeJson);
+          recipes.add(recipe);
+        }
+      }
+    });
+    return recipes;
   }
 
-    @override
-  Future<Recipe> getRecipe(String id) async{
-    return _recipes.firstWhere((recipe) => recipe.id == id);
+  @override
+  Future<Recipe?> getRecipe(String id) async {
+    final prefs = await _getPrefs();
+    final recipeJson = prefs.getString('recipe_$id');
+    return recipeJson != null ? Recipe.fromJson(recipeJson) : null;
   }
 
-    @override
-  Future<void> addRecipe(Recipe recipe) async{
-    _recipes.add(recipe);
+  @override
+  Future<void> addRecipe(Recipe recipe) async {
+    final prefs = await _getPrefs();
+    await prefs.setString('recipe_${recipe.id}', recipe.toJson());
     notifyListeners();
   }
 
   @override
-  Future<void> updateRecipe(Recipe recipe) async{
-  final index = _recipes.indexWhere((checkedRecipe) => checkedRecipe.id == recipe.id);
-    _recipes[index] = recipe;
-  notifyListeners();
-  }
-  Future<void> deleteRecipe(String id) async{
-    _recipes.removeWhere((recipe) => recipe.id == id);
+  Future<void> updateRecipe(Recipe recipe) async {
+    final prefs = await _getPrefs();
+    await prefs.setString('recipe_${recipe.id}', recipe.toJson());
     notifyListeners();
   }
 
+  @override
+  Future<void> deleteRecipe(String id) async {
+    final prefs = await _getPrefs();
+    await prefs.remove('recipe_$id');
+    notifyListeners();
+  }
 }
