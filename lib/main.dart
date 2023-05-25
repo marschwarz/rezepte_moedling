@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rezepte_moedling/repositories/list_recipe_repository.dart';
 import 'package:rezepte_moedling/repositories/recipe_repository.dart';
+import 'repositories/local_recipe_repository.dart';
 import 'screens/details_screen.dart';
 
 import 'models/recipe.dart';
@@ -12,11 +12,9 @@ import 'screens/home_screen.dart';
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<RecipeRepository>(
-      create: (context) => ListRecipeRepository(),
+      create: (context) => LocalRecipeRepository(),
     ),
-
-  ],
-  child: const MyApp()));
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
